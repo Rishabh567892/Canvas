@@ -21,16 +21,29 @@ ctx.fillRect(5, 5, 100, 30);
 
 const camera = [0, 0, -20]
 
+
 const vertices = [
-  [150, 150, 0],
-  [200, 150, 0],
-  [200, 200, 0],
-  [150, 200, 0],
-  [150, 150, .1],
-  [200, 150, .1],
-  [200, 200, .1],
-  [150, 200, .1]
+  [150, 150, 1],
+  [200, 150, 1],
+  [200, 200, 1],
+  [150, 200, 1],
+  [160, 155, 1.1],
+  [250, 170, 1.1],
+  [220, 230, 1.1],
+  [130, 250, 1.1]
 ]
+
+
+// const vertices = [
+//   [150, 150, 1],
+//   [200, 150, 1],
+//   [200, 200, 1],
+//   [150, 200, 1],
+//   [150, 150, 1.1],
+//   [200, 150, 1.1],
+//   [200, 200, 1.1],
+//   [150, 200, 1.1]
+// ]
 
 const edges = [
   '01', '12', '23', '30',
@@ -45,6 +58,26 @@ const edges = [
 
 console.log('Permuatations of edges: ', edges)
 
+const scrollBar = document.querySelector("input")
+
+function onScrollChange(e) {
+  let scrollRate = 0.1;
+  vertices[4][2] = 1.1 + scrollRate * e.target.value - scrollRate * 50;
+  vertices[5][2] = 1.1 + scrollRate * e.target.value - scrollRate * 50;
+  vertices[6][2] = 1.1 + scrollRate * e.target.value - scrollRate * 50;
+  vertices[7][2] = 1.1 + scrollRate * e.target.value - scrollRate * 50;
+  if (render) {
+    render();
+    console.log('render called')
+  }
+}
+
+scrollBar.addEventListener("change", onScrollChange);
+scrollBar.addEventListener("dragstart", e => {
+  console.log('Dragging')
+  onScrollChange(e);
+});
+
 let t = 0;
 let change = 0.001;
 
@@ -52,34 +85,34 @@ function render() {
 
   ctx.clearRect(0, 0, w, h);
 
-  t += change;
+  // t += change;
 
-  if (t <= -0.5) {
-    change = 0.001;
-  } else if (t >= 1) {
-    change = -0.001;
-  }
+  // if (t <= -0.5) {
+  //   change = 0.001;
+  // } else if (t >= 1) {
+  //   change = -0.001;
+  // }
 
   edges.forEach((edge) => {
     ctx.beginPath()
 
     let v1, v2;
 
-    let zEff1 = vertices[edge[0]][2] + 1 + t;
+    let zEff1 = vertices[edge[0]][2];
     // if (zEff1 == 0) {
     //   v1 = vertices[edge[0]]
     // } else {
     v1 = vertices[edge[0]].map(v => v / zEff1)
-    console.log(edge, ' v1:', v1)
+    // console.log(edge, ' v1:', v1)
     // }
 
 
-    let zEff2 = vertices[edge[1]][2] + 1;
+    let zEff2 = vertices[edge[1]][2];
     // if (zEff2 == 0) {
     //   v2 = vertices[edge[1]]
     // } else {
     v2 = vertices[edge[1]].map(v => v / zEff2)
-    console.log(edge, ' v2:', v2)
+    // console.log(edge, ' v2:', v2)
     // }
 
     ctx.moveTo(v1[0], v1[1]);
@@ -88,13 +121,13 @@ function render() {
 
     ctx.closePath()
 
-    ctx.strokeStyle = "cyan"
+    ctx.strokeStyle = "#ffffff"
     ctx.stroke()
 
   })
 
 
-  requestAnimationFrame(render)
+  // requestAnimationFrame(render)
 }
 
 render()
